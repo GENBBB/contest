@@ -2,11 +2,24 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <fcntl.h>
+
+enum
+{
+    STR_SIZE = 8
+};
 
 int
-child_process(char *str, int num)
+child_process(int num)
 {
+    char str[STR_SIZE];
     int value;
+    int fd = dup(0);
+    lseek(fd, num * STR_SIZE, SEEK_SET);
+    if (read(fd, str, STR_SIZE) != STR_SIZE) {
+        return 1;
+    }
+    close(fd);
     sscanf(str, "%d", &value);
     printf("%d %d\n", num+1, value * value);
     return 0;
@@ -15,20 +28,10 @@ child_process(char *str, int num)
 int
 main(int argc, char *argv[])
 {
-    char *strings[3];
-    char s1[8], s2[8], s3[8];
-    strings[0] = s1;
-    strings[1] = s2;
-    strings[2] = s3;
-    for (int i = 0; i < 3; i++) {
-        if (read(0, strings[i], 8) != 8) {
-            return 1;
-        }
-    }
     for (int i = 0; i < 3; i++) {
         pid_t pid = fork();
         if (!pid) {
-            exit(child_process(strings[i], i));
+            exit(child_process(i));
         } else if (pid == -1) {
             return 1;
         }
