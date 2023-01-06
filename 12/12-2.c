@@ -27,7 +27,7 @@ main(int argc, char *argv[])
                     result++;
                 }
             }
-            n_proc += 2;
+            n_proc = 0;
         } else {
             continue;
         }
@@ -36,6 +36,15 @@ main(int argc, char *argv[])
             child_process(argv[i]);
         } else if (pid == -1) {
             return 1;
+        }
+        if (argv[i][0] == 's') {
+            int status;
+            if (wait(&status) == -1) {
+                return 1;
+            }
+            if (WIFEXITED(status) && WEXITSTATUS(status) == 0) {
+                result++;
+            }
         }
     }
     while (n_proc--) {

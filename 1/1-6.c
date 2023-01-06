@@ -8,17 +8,21 @@ typedef struct Vertex
     int32_t value;
 } Vertex;
 
-int32_t min(int32_t a, int32_t b) {
+int32_t
+min(int32_t a, int32_t b)
+{
     return a > b ? b : a;
 }
 
-int32_t max(int32_t a, int32_t b) {
+int32_t
+max(int32_t a, int32_t b)
+{
     return a > b ? a : b;
 }
 
 int32_t 
 get(
-        Vertex * segment_tree, 
+        Vertex *segment_tree,
         int32_t ver, 
         int32_t range_left, 
         int32_t range_right, 
@@ -48,7 +52,7 @@ get(
 
 void
 update(
-        Vertex * segment_tree, 
+        Vertex *segment_tree,
         int32_t ver, 
         int32_t range_left, 
         int32_t range_right, 
@@ -77,19 +81,24 @@ update(
 int
 main(void)
 {
+    enum {
+        NUM_ARGS = 3,
+        MUL_SIZE_SEGMENT_TREE = 4,
+        COMMAND_GET = 2
+    };
     int32_t n, number_commands;
-    if (scanf("%d %d", &n, &number_commands) != 2) {
+    if (scanf("%d%d", &n, &number_commands) != 2) {
         fprintf(stderr, "Input error!\n");
         return 1;
     }
-    Vertex * segment_tree = calloc(4 * n, sizeof(*segment_tree));
+    Vertex *segment_tree = calloc(MUL_SIZE_SEGMENT_TREE * n, sizeof(*segment_tree));
     if (segment_tree == NULL) {
         fprintf(stderr, "Memory allocation error!\n");
-        return 2;
+        return 1;
     }
     for (size_t i = 0; i < number_commands; i++) {
         int32_t command, req_left, req_right, delta;
-        if (scanf("%d %d %d", &command, &req_left, &req_right) != 3) {
+        if (scanf("%d%d%d", &command, &req_left, &req_right) != NUM_ARGS) {
             fprintf(stderr, "Input error!\n");
             return 1;
         }
@@ -100,11 +109,11 @@ main(void)
                 return 1;
             }
             update(segment_tree, 1, 0, n - 1, req_left, req_right, delta);
-        } else if (command == 2) {
-            printf("%d\n", get(segment_tree, 1, 0, n-1, req_left, req_right));
+        } else if (command == COMMAND_GET) {
+            printf("%d\n", get(segment_tree, 1, 0, n - 1, req_left, req_right));
         } else {
             fprintf(stderr, "Unknown command\n");
-            return 3;
+            return 1;
         }
     }
     free(segment_tree);

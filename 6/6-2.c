@@ -1,11 +1,13 @@
 enum
 {
     CURR_DIR = 2,
-    PREV_DIR = 3
+    PREV_DIR = 3,
+    DIST_TO_FIRST_POINT = 2
 };
 
 unsigned long long
-len_str(char *buf) {
+len_str(char *buf)
+{
     unsigned long long result = 0, i = 0;
     for (; buf[i] != 0; i++) {
         result++;
@@ -14,18 +16,19 @@ len_str(char *buf) {
 }
 
 void
-normalize_path(char * buf) {
+normalize_path(char * buf)
+{
     unsigned long long len = len_str(buf);
     unsigned long long left = len, right = len, n_del = 0;
     for (int i = len - 1; i >= 0; i--) {
         if (buf[i] == '/') {
             right = left;
             left = i;
-            if (right - left == CURR_DIR && buf[right-1] == '.') {
-                buf[right-1] = '/';
-            } else if (right - left == PREV_DIR && buf[right-1] == '.' && buf[right-2] =='.') {
-                buf[right-1] = '/';
-                buf[right-2] = '/';
+            if (right - left == CURR_DIR && buf[right - 1] == '.') {
+                buf[right - 1] = '/';
+            } else if (right - left == PREV_DIR && buf[right - 1] == '.' && buf[right - DIST_TO_FIRST_POINT] =='.') {
+                buf[right - 1] = '/';
+                buf[right - DIST_TO_FIRST_POINT] = '/';
                 n_del++;
             } else if (n_del) {
                 for (int j = left + 1; j < right; j++) {
@@ -46,7 +49,7 @@ normalize_path(char * buf) {
             } else {
                 token_flag = 1;
             }
-            buf[i-shift] = buf[i];
+            buf[i - shift] = buf[i];
         }
     }
     if (len - shift - 1 == 0) {

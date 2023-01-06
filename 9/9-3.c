@@ -15,7 +15,6 @@ child_process(int num)
     char str[STR_SIZE];
     int value;
     int fd = dup(0);
-    lseek(fd, num * STR_SIZE, SEEK_SET);
     if (read(fd, str, STR_SIZE) != STR_SIZE) {
         return 1;
     }

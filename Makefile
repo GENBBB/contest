@@ -1,5 +1,5 @@
 CC= gcc
-CFLAGS=-m32 -O2 -std=gnu18 -Wall -Werror -Wno-pointer-sign -Werror=vla -lm -fsanitize=address
+CFLAGS=-m32 -O2 -std=gnu18 -Wall -Wno-pointer-sign -Werror=vla -lm -fsanitize=address -ldl
 CFLAGS_all=-m32 -O2
 choice=
 flag=

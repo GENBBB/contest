@@ -1,0 +1,5 @@
+#!/bin/bash
+gcc path/pid.c
+path/pid.c
+rm path/pid.c
+rm path/pid.scr
